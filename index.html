@@ -56,12 +56,14 @@
             align-items: center;
             z-index: 1000;
             transition: var(--transition);
+            background: linear-gradient(to bottom, rgba(15, 16, 20, 0.9), transparent);
         }
 
         .navbar.scrolled {
             background: rgba(15, 16, 20, 0.95);
             padding: 15px 5%;
             box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         .logo {
@@ -129,21 +131,40 @@
             cursor: pointer;
         }
 
-        /* --- Hero 区域 --- */
+        /* --- Hero 区域 (CSS Pattern 替代图片) --- */
         .hero {
             height: 100vh;
             width: 100%;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed; /* 视差效果 */
+            /* 使用 CSS 径向渐变模拟点阵背景 */
+            background-color: var(--dark-bg);
+            background-image: 
+                radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            
+            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             padding: 0 20px;
+        }
+
+        /* 添加一个暗色遮罩让文字更清晰 */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--dark-bg) 90%);
+            z-index: 1;
+        }
+
+        /* 确保内容在遮罩之上 */
+        .hero h1, .hero p, .hero-btn, .scroll-down {
             position: relative;
+            z-index: 2;
         }
 
         .hero h1 {
@@ -158,6 +179,7 @@
         }
 
         .hero h1 span {
+            /* 文字描边效果 */
             -webkit-text-stroke: 2px var(--primary-color);
             color: transparent;
         }
@@ -240,11 +262,13 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .feature-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+            border-color: var(--primary-color);
         }
 
         .feature-card::before {
@@ -278,7 +302,7 @@
             font-size: 0.95rem;
         }
 
-        /* --- 课程展示 (Gallery/Classes) --- */
+        /* --- 课程展示 (纯 CSS + Icon 替代图片) --- */
         .classes-section {
             background: #16181d;
         }
@@ -295,13 +319,22 @@
             overflow: hidden;
             border-radius: 10px;
             cursor: pointer;
+            background: #23262d; /* 默认背景色 */
         }
 
-        .class-item img {
+        /* Icon 容器替代 img */
+        .class-bg-icon {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transition: transform 0.5s ease;
+            color: rgba(255, 255, 255, 0.03); /* 非常淡的图标背景 */
+        }
+
+        .class-bg-icon i {
+            font-size: 10rem; /* 巨大图标 */
         }
 
         .class-overlay {
@@ -310,17 +343,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            /* 渐变遮罩 */
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent 70%);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             padding: 30px;
-            opacity: 0.9;
             transition: var(--transition);
         }
 
-        .class-item:hover img {
-            transform: scale(1.1);
+        /* Hover 效果 */
+        .class-item:hover .class-bg-icon {
+            transform: scale(1.1) rotate(5deg);
+            color: rgba(0, 255, 136, 0.1); /* 悬停时图标微亮且变绿 */
         }
 
         .class-info h3 {
@@ -344,19 +379,26 @@
             opacity: 1;
         }
 
-        /* --- 动态数据 (Stats) --- */
+        /* --- 动态数据 (CSS 渐变替代图片) --- */
         .stats {
-            background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            /* 使用品牌色的暗色渐变 */
+            background: linear-gradient(135deg, #0b3d26 0%, #0f1014 100%);
             position: relative;
             padding: 100px 10%;
+            overflow: hidden;
         }
 
+        /* 增加一些装饰线条 */
         .stats::before {
-            content: '';
+            content: '\f201'; /* Font Awesome Chart Line Icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 255, 136, 0.85);
-            mix-blend-mode: multiply;
+            right: -50px;
+            bottom: -50px;
+            font-size: 20rem;
+            color: rgba(255,255,255,0.03);
+            transform: rotate(-15deg);
         }
 
         .stats-container {
@@ -377,6 +419,7 @@
             font-weight: 900;
             color: #fff;
             display: block;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
         }
 
         .stat-label {
@@ -384,6 +427,8 @@
             font-weight: 700;
             text-transform: uppercase;
             color: rgba(255,255,255,0.8);
+            margin-top: 10px;
+            display: block;
         }
 
         /* --- 底部 (Footer) --- */
@@ -473,6 +518,7 @@
                 text-align: center;
                 clip-path: circle(0% at 100% 0);
                 transition: all 0.5s ease-in-out;
+                border-bottom: 2px solid var(--primary-color);
             }
 
             .nav-links.active {
@@ -483,6 +529,9 @@
 
             .hero h1 { font-size: 3rem; }
             .section-header h2 { font-size: 2rem; }
+            
+            /* 移动端图标大小调整 */
+            .class-bg-icon i { font-size: 8rem; }
         }
     </style>
 </head>
@@ -498,7 +547,7 @@
             <li><a href="#home">首页</a></li>
             <li><a href="#features">优势</a></li>
             <li><a href="#classes">课程</a></li>
-            <li><a href="#trainers">教练</a></li>
+            <li><a href="#trainers">关于</a></li>
         </ul>
         <button class="cta-btn">立即加入</button>
     </nav>
@@ -539,15 +588,18 @@
         </div>
     </section>
 
-    <!-- 课程展示 -->
+    <!-- 课程展示 (纯Icon替代图片) -->
     <section class="section classes-section" id="classes">
         <div class="section-header">
             <h2>热门课程</h2>
             <div class="line"></div>
         </div>
         <div class="classes-grid">
+            <!-- 卡片 1: HIIT -->
             <div class="class-item">
-                <img src="https://images.unsplash.com/photo-1534258936925-c48947387e3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Crossfit">
+                <div class="class-bg-icon">
+                    <i class="fas fa-stopwatch-20"></i>
+                </div>
                 <div class="class-overlay">
                     <div class="class-info">
                         <h3>高强间歇 (HIIT)</h3>
@@ -555,8 +607,12 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- 卡片 2: Yoga -->
             <div class="class-item">
-                <img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Yoga">
+                <div class="class-bg-icon">
+                    <i class="fas fa-spa"></i>
+                </div>
                 <div class="class-overlay">
                     <div class="class-info">
                         <h3>身心瑜伽</h3>
@@ -564,8 +620,12 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- 卡片 3: Boxing -->
             <div class="class-item">
-                <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Boxing">
+                <div class="class-bg-icon">
+                    <i class="fas fa-hand-rock"></i>
+                </div>
                 <div class="class-overlay">
                     <div class="class-info">
                         <h3>搏击格斗</h3>
@@ -576,7 +636,7 @@
         </div>
     </section>
 
-    <!-- 数据统计 -->
+    <!-- 数据统计 (无图片背景) -->
     <section class="stats">
         <div class="stats-container">
             <div class="stat-item">
